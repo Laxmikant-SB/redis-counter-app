@@ -12,7 +12,3 @@ while True:
     value = r.get('visits')
     print(f"Visit count: {value}")
     time.sleep(2)
-
-# Intentional broken syntax
-def broken_function(:
-    pass
