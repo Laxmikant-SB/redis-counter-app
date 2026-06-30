@@ -30,3 +30,9 @@ if __name__ == "__main__":
     test_app_has_no_syntax_errors()
     test_requirements_file_exists()
     print("\n🎉 All tests passed!")
+
+def test_dockerfile_exists():
+    """Check Dockerfile exists"""
+    import os
+    assert os.path.exists("Dockerfile"), "Dockerfile is missing!"
+    print("✅ Dockerfile exists")
