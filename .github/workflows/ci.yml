@@ -22,26 +22,40 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Run tests
-        run: |
-          python test_app.py
+        run: python test_app.py
 
-  docker-build-check:
-    name: Verify Docker Build
+  build-and-push:
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
     needs: test
+    # Only push on actual commits to main, not on pull requests
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: |
-          docker build -t redis-app:ci-test .
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Verify image was created
+      - name: Build and tag image
         run: |
-          docker images redis-app:ci-test
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/redis-counter-app:latest .
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/redis-counter-app:latest \
+                     ${{ secrets.DOCKERHUB_USERNAME }}/redis-counter-app:${{ github.sha }}
+
+      - name: Push image to Docker Hub
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/redis-counter-app:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/redis-counter-app:${{ github.sha }}
+
+      - name: Confirm push
+        run: |
+          echo "✅ Image pushed successfully!"
+          echo "Pull it with: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/redis-counter-app:latest"
