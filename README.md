@@ -12,3 +12,4 @@ Connects to Redis and increments a visit counter every 2 seconds.
 - Redis
 - Docker
 - GitHub Actions CI/CD
+# Auto-deployed via CI/CD
