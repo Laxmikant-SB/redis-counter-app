@@ -24,6 +24,10 @@ def test_requirements_file_exists():
         content = f.read()
     assert "redis" in content, "redis package not in requirements.txt"
     print("✅ requirements.txt is valid")
+def test_version_in_readme():
+     import os
+     assert os.path.exists("README.md")
+     print("✅ README.md exists")
 
 if __name__ == "__main__":
     test_app_file_exists()

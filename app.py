@@ -10,5 +10,5 @@ while True:
     counter += 1
     r.set('visits', counter)
     value = r.get('visits')
-    print(f"Visit count: {value}")
+    print(f"Visit count v2.0: {value}")
     time.sleep(2)
